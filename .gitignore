@@ -1,0 +1,14 @@
+# Directory
+.idea
+/vendor
+
+# Envronment
+.env
+
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+.DS_Store
