@@ -9,7 +9,6 @@ This project has 4 Domains layer :
 
 Todo next :
 - refactor code
-- push test
 - multiple data source repository (RDBMS/Sql, NoSql, External API, File)
 - multiple data delivery (REST, WebSocket, gRPC)
-- app logs (local/file, cloud/3rd party)
+- cache support with redis or file
