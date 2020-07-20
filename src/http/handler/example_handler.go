@@ -30,6 +30,7 @@ func NewExampleHandler(router *gin.Engine, service domain.ExampleService) {
 // Fetch will get all the example data
 func (handler ExampleHandler) Fetch(context *gin.Context) {
 	examples, _:= handler.ExampleService.Fetch()
+
 	context.JSON(http.StatusOK, gin.H{
 		"code" : http.StatusOK,
 		"message" : http.StatusText(http.StatusOK),
@@ -43,7 +44,18 @@ func (handler ExampleHandler) Find(context *gin.Context) {
 	if err != nil {
 		panic("error")
 	}
+
 	example, _ := handler.ExampleService.Find(id)
+
+	if example.ID == 0 {
+		context.JSON(http.StatusNotFound, gin.H{
+			"code" : http.StatusNotFound,
+			"message" : http.StatusText(http.StatusNotFound),
+			"result": nil,
+		})
+		return
+	}
+
 	context.JSON(http.StatusOK, gin.H{
 		"code" : http.StatusOK,
 		"message" : http.StatusText(http.StatusOK),

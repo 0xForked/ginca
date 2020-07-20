@@ -1,6 +1,7 @@
 package config
 
 import (
+	"github.com/gin-gonic/gin"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/spf13/viper"
 	"log"
@@ -14,16 +15,15 @@ type AppConfig struct {
 }
 
 func init() {
-	setConfig()
-	// notify user about server environment is release mode or debug mode
-	if viper.GetString(`SERVER_ENV`) == "debug" {
-		log.Println("Service RUN on DEBUG mode")
-	}
+	// load and read config file
+	setConfigFile()
+	// set server environment
+	setServerEnvironment()
 	// set server port
-	setServerPort(viper.GetString(`SERVER_PORT`))
+	setServerPort()
 }
 
-func setConfig() {
+func setConfigFile() {
 	// find environment file
 	viper.SetConfigFile(`.env`)
 	// error handling for specific case
@@ -38,15 +38,24 @@ func setConfig() {
 	}
 }
 
-func setServerPort(Port string) {
-	port = Port
+func setServerPort() {
+	port = viper.GetString(`SERVER_PORT`)
+}
+
+func setServerEnvironment()  {
+	if viper.GetString(`SERVER_ENV`) == "production" {
+		log.Println("Service RUN on RELEASE mode")
+		gin.SetMode(gin.ReleaseMode)
+	} else {
+		log.Println("Service RUN on DEBUG mode")
+	}
 }
 
 func (config AppConfig) GetServerPort() string {
 	return port
 }
 
-// SetupAppConfig initialize the app configuration
-func SetupAppConfig() *AppConfig {
+// InitAppConfig initialize the app configuration
+func InitAppConfig() *AppConfig {
 	return &AppConfig{}
 }

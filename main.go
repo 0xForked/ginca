@@ -4,30 +4,32 @@ import (
 	"github.com/aasumitro/gorest/config"
 	"github.com/aasumitro/gorest/src/http/handler"
 	"github.com/aasumitro/gorest/src/http/middleware"
-	"github.com/aasumitro/gorest/src/repository/mysql"
-	"github.com/aasumitro/gorest/src/service"
+	dataSource "github.com/aasumitro/gorest/src/repository/mysql"
+	useCase "github.com/aasumitro/gorest/src/service"
 	"github.com/gin-gonic/gin"
 	"log"
 )
 
 func main() {
 	// initialize and setup app configuration
-	appConfig := config.SetupAppConfig()
+	appConfig := config.InitAppConfig()
+	// setup server access log
+	appConfig.SetupAccessLog()
 	// setup database connection
 	appConfig.SetupDatabaseConnection()
 	// Creates a gin router with default middleware:
 	// logger and recovery (crash-free) middleware
-	app := gin.Default()
+	appEngine := gin.Default()
 	// register custom middleware
 	httpMiddleware := middleware.InitHttpMiddleware()
 	// use custom middleware
-	app.Use(httpMiddleware.CORS())
+	appEngine.Use(httpMiddleware.CORS())
 	// Initialize data repositories
-	repository := mysql.NewMySQLExampleRepository(appConfig.GetDBConnection())
+	repository := dataSource.NewMySQLExampleRepository(appConfig.GetDBConnection())
 	// Initialize app use case (service)
-	useCase := service.NewExampleService(repository)
+	service := useCase.NewExampleService(repository)
 	// initialize http handler
-	handler.NewExampleHandler(app, useCase)
+	handler.NewExampleHandler(appEngine, service)
 	// run the server
-	log.Fatal(app.Run(appConfig.GetServerPort()))
+	log.Fatal(appEngine.Run(appConfig.GetServerPort()))
 }
