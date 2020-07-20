@@ -1,7 +1,7 @@
 package config
 
 import (
-	"github.com/aasumitro/gorest/domain"
+	"github.com/aasumitro/gorest/src/domain"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/spf13/viper"

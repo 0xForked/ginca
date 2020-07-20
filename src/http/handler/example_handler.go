@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"github.com/aasumitro/gorest/domain"
+	"github.com/aasumitro/gorest/src/domain"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"

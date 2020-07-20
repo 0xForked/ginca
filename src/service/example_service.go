@@ -1,11 +1,11 @@
 package service
 
 import (
-	"github.com/aasumitro/gorest/domain"
+	"github.com/aasumitro/gorest/src/domain"
 )
 
 type exampleService struct {
-	exampleRepository	domain.MySQlRepository
+	exampleRepository domain.MySQlRepository
 }
 
 func NewExampleService(repository domain.MySQlRepository) domain.ExampleService {
