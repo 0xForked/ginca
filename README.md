@@ -12,3 +12,4 @@ Todo next :
 - multiple data source repository (RDBMS/Sql, NoSql, External API, File)
 - multiple data delivery (REST, WebSocket, gRPC)
 - cache support with redis or file
+- docker support
