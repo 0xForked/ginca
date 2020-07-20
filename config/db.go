@@ -3,6 +3,7 @@ package config
 import (
 	"github.com/aasumitro/gorest/domain"
 	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/spf13/viper"
 )
 
@@ -25,6 +26,6 @@ func setDBConnection(DB *gorm.DB) {
 	db = DB
 }
 
-func (config AppConfig) GetDBConnection() *gorm.DB {
+func (config AppConfig) GetDatabaseConnection() *gorm.DB {
 	return db
 }

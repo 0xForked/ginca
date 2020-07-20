@@ -18,7 +18,7 @@ type ExampleService interface {
 	Delete(id int) error
 }
 
-type ExampleRepository interface {
+type MySQlRepository interface {
 	Fetch() ([]Example, error)
 	Find(id int) (Example, error)
 	Store(example *Example) error

@@ -27,6 +27,10 @@ func (handler mainHandler) ping(context *gin.Context) {
 	context.JSON(http.StatusOK, gin.H{
 		"code" : http.StatusOK,
 		"status" : http.StatusText(http.StatusOK),
-		"message": "Service is running well",
+		"message": map[string]string{
+			"service" : "Service is running well",
+			"mysql" : "",
+			"redis": "",
+		},
 	})
 }

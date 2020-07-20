@@ -17,6 +17,8 @@ func main() {
 	appConfig.SetupAccessLog()
 	// setup database connection
 	appConfig.SetupDatabaseConnection()
+	// setup redis client connection
+	appConfig.SetupRedisClientConnection()
 	// Creates a gin router with default middleware:
 	// logger and recovery (crash-free) middleware
 	appEngine := gin.Default()
@@ -25,7 +27,8 @@ func main() {
 	// use custom middleware
 	appEngine.Use(httpMiddleware.CORS())
 	// Initialize data repositories
-	exampleRepository := dataSource.NewMySQLExampleRepository(appConfig.GetDBConnection())
+	exampleRepository := dataSource.NewMySQLExampleRepository(
+		appConfig.GetDatabaseConnection())
 	// Initialize app use case (service)
 	exampleService := useCase.NewExampleService(exampleRepository)
 	// initialize http handler

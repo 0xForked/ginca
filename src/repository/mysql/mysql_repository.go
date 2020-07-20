@@ -6,16 +6,16 @@ import (
 )
 
 type mysqlExampleRepository struct {
-	Connection *gorm.DB
+	connection *gorm.DB
 }
 
-func NewMySQLExampleRepository(db *gorm.DB) domain.ExampleRepository {
-	return &mysqlExampleRepository{Connection: db}
+func NewMySQLExampleRepository(db *gorm.DB) domain.MySQlRepository {
+	return &mysqlExampleRepository{connection: db}
 }
 
 func (mysql mysqlExampleRepository) Fetch() (data []domain.Example, error error) {
 	var examples []domain.Example
-	if err := mysql.Connection.Find(&examples).Error; err != nil {
+	if err := mysql.connection.Find(&examples).Error; err != nil {
 		return nil, err
 	}
 	return examples, nil
@@ -23,28 +23,28 @@ func (mysql mysqlExampleRepository) Fetch() (data []domain.Example, error error)
 
 func (mysql mysqlExampleRepository) Find(id int) (data domain.Example, error error) {
 	var example domain.Example
-	if err := mysql.Connection.First(&example, id).Error; err != nil {
+	if err := mysql.connection.First(&example, id).Error; err != nil {
 		return example, err
 	}
 	return example, nil
 }
 
 func (mysql mysqlExampleRepository) Store(example *domain.Example) error {
-	if err := mysql.Connection.Create(&example).Error; err != nil {
+	if err := mysql.connection.Create(&example).Error; err != nil {
 		return err
 	}
 	return nil
 }
 
 func (mysql mysqlExampleRepository) Update(example *domain.Example) error {
-	if err := mysql.Connection.Model(&example).Updates(example).Error; err != nil {
+	if err := mysql.connection.Model(&example).Updates(example).Error; err != nil {
 		return err
 	}
 	return nil
 }
 
 func (mysql mysqlExampleRepository) Delete(example *domain.Example) error {
-	if err := mysql.Connection.Delete(&example).Error; err != nil {
+	if err := mysql.connection.Delete(&example).Error; err != nil {
 		return err
 	}
 	return nil
