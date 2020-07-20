@@ -15,21 +15,21 @@ type Response struct {
 }
 
 // ExampleHandler represent the http handler for example
-type ExampleHandler struct {
-	ExampleService domain.ExampleService
+type exampleHandler struct {
+	exampleService domain.ExampleService
 }
 
 // NewExampleHandler will initialize the example resources endpoint
 func NewExampleHandler(router *gin.Engine, service domain.ExampleService) {
-	handler := &ExampleHandler{ExampleService: service}
+	handler := &exampleHandler{exampleService: service}
 	v1 := router.Group("/v1")
-	v1.GET("/examples", handler.Fetch)
-	v1.GET("/examples/:id", handler.Find)
+	v1.GET("/examples", handler.fetch)
+	v1.GET("/examples/:id", handler.find)
 }
 
 // Fetch will get all the example data
-func (handler ExampleHandler) Fetch(context *gin.Context) {
-	examples, _:= handler.ExampleService.Fetch()
+func (handler exampleHandler) fetch(context *gin.Context) {
+	examples, _:= handler.exampleService.Fetch()
 
 	context.JSON(http.StatusOK, gin.H{
 		"code" : http.StatusOK,
@@ -39,13 +39,13 @@ func (handler ExampleHandler) Fetch(context *gin.Context) {
 }
 
 // Find will get example data by id
-func (handler ExampleHandler) Find(context *gin.Context) {
+func (handler exampleHandler) find(context *gin.Context) {
 	id, err := strconv.Atoi(context.Param("id"))
 	if err != nil {
 		panic("error")
 	}
 
-	example, _ := handler.ExampleService.Find(id)
+	example, _ := handler.exampleService.Find(id)
 
 	if example.ID == 0 {
 		context.JSON(http.StatusNotFound, gin.H{
@@ -61,4 +61,17 @@ func (handler ExampleHandler) Find(context *gin.Context) {
 		"message" : http.StatusText(http.StatusOK),
 		"result" : example,
 	})
+}
+
+
+func (handler exampleHandler) create(context *gin.Context) {
+
+}
+
+func (handler exampleHandler) edit(context *gin.Context) {
+
+}
+
+func (handler exampleHandler) destroy(context *gin.Context) {
+
 }

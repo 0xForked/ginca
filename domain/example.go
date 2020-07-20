@@ -13,9 +13,15 @@ type Example struct {
 type ExampleService interface {
 	Fetch() ([]Example, error)
 	Find(id int) (Example, error)
+	//Store()
+	//Update()
+	//Delete()
 }
 
 type ExampleRepository interface {
 	Fetch() (data []Example, error error)
 	Find(id int) (Example, error)
+	//Store()
+	//Update()
+	//Delete()
 }

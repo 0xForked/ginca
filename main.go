@@ -25,11 +25,12 @@ func main() {
 	// use custom middleware
 	appEngine.Use(httpMiddleware.CORS())
 	// Initialize data repositories
-	repository := dataSource.NewMySQLExampleRepository(appConfig.GetDBConnection())
+	exampleRepository := dataSource.NewMySQLExampleRepository(appConfig.GetDBConnection())
 	// Initialize app use case (service)
-	service := useCase.NewExampleService(repository)
+	exampleService := useCase.NewExampleService(exampleRepository)
 	// initialize http handler
-	handler.NewExampleHandler(appEngine, service)
+	handler.NewMainHandler(appEngine)
+	handler.NewExampleHandler(appEngine, exampleService)
 	// run the server
 	log.Fatal(appEngine.Run(appConfig.GetServerPort()))
 }
