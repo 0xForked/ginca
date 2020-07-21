@@ -25,10 +25,3 @@ type ExampleMySQlRepository interface {
 	Update(example *Example) error
 	Delete(example *Example) error
 }
-
-type RedisRepository interface {
-	Set(key string, value interface{})
-	GetObject(key string) *map[string]interface{}
-	GetArray(key string) *[]map[string]interface{}
-	Ping() string
-}
