@@ -55,6 +55,14 @@ func (config AppConfig) GetServerPort() string {
 	return port
 }
 
+func (config AppConfig) IsDevelopmentMode() bool {
+	if viper.GetString(`SERVER_ENV`) == "production" {
+		return false
+	} else {
+		return true
+	}
+}
+
 // InitAppConfig initialize the app configuration
 func InitAppConfig() *AppConfig {
 	return &AppConfig{}

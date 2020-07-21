@@ -15,8 +15,10 @@ import (
 func main() {
 	// initialize and setup app configuration
 	appConfig := config.InitAppConfig()
-	// setup server access log
-	appConfig.SetupAccessLog()
+	// setup server access log when on development mode
+	if appConfig.IsDevelopmentMode() {
+		appConfig.SetupAccessLog()
+	}
 	// setup database connection
 	appConfig.SetupDatabaseConnection()
 	// setup redis client connection
