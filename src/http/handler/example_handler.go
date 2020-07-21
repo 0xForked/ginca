@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"github.com/aasumitro/gorest/src/domain"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -11,11 +12,12 @@ import (
 // ExampleHandler represent the http handler for example
 type exampleHandler struct {
 	exampleService domain.ExampleService
+	exampleCache domain.RedisRepository
 }
 
 // NewExampleHandler will initialize the example resources endpoint
-func NewExampleHandler(router *gin.Engine, service domain.ExampleService) {
-	handler := &exampleHandler{exampleService: service}
+func NewExampleHandler(router *gin.Engine, service domain.ExampleService, redis domain.RedisRepository) {
+	handler := &exampleHandler{exampleService: service, exampleCache: redis}
 	v1 := router.Group("/v1")
 	v1.GET("/examples", handler.fetch)
 	v1.GET("/examples/:id", handler.find)
@@ -42,21 +44,31 @@ func (handler exampleHandler) find(context *gin.Context) {
 		panic("error")
 	}
 
-	example, err := handler.exampleService.Find(id)
+	var example = handler.exampleCache.Get(
+		fmt.Sprintf("example:%d", id))
 
-	if err != nil {
-		context.JSON(http.StatusBadRequest, domain.Respond{
-			Code : http.StatusBadRequest,
-			Status: err.Error(),
+	if example == nil {
+		example, err := handler.exampleService.Find(id)
+		if err != nil {
+			context.JSON(http.StatusBadRequest, domain.Respond{
+				Code : http.StatusBadRequest,
+				Status: err.Error(),
+			})
+			return
+		}
+		handler.exampleCache.Set(fmt.Sprintf("example:%d", id), example)
+		context.JSON(http.StatusOK, domain.Respond{
+			Code : http.StatusOK,
+			Status : http.StatusText(http.StatusOK),
+			Data : example,
 		})
-		return
+	} else {
+		context.JSON(http.StatusOK, domain.Respond{
+			Code : http.StatusOK,
+			Status : http.StatusText(http.StatusOK),
+			Data : example,
+		})
 	}
-
-	context.JSON(http.StatusOK, domain.Respond{
-		Code : http.StatusOK,
-		Status : http.StatusText(http.StatusOK),
-		Data : example,
-	})
 }
 
 func (handler exampleHandler) create(context *gin.Context) {

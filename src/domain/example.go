@@ -25,3 +25,8 @@ type MySQlRepository interface {
 	Update(example *Example) error
 	Delete(example *Example) error
 }
+
+type RedisRepository interface {
+	Set(key string, value Example)
+	Get(key string) *Example
+}

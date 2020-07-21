@@ -4,10 +4,12 @@ import (
 	"github.com/aasumitro/gorest/config"
 	"github.com/aasumitro/gorest/src/http/handler"
 	"github.com/aasumitro/gorest/src/http/middleware"
-	dataSource "github.com/aasumitro/gorest/src/repository/mysql"
+	dataSourceMySQL "github.com/aasumitro/gorest/src/repository/mysql"
+	dataSourceRedis "github.com/aasumitro/gorest/src/repository/redis"
 	useCase "github.com/aasumitro/gorest/src/service"
 	"github.com/gin-gonic/gin"
 	"log"
+	"time"
 )
 
 func main() {
@@ -26,14 +28,17 @@ func main() {
 	httpMiddleware := middleware.InitHttpMiddleware()
 	// use custom middleware
 	appEngine.Use(httpMiddleware.CORS())
-	// Initialize data repositories
-	exampleRepository := dataSource.NewMySQLExampleRepository(
+	// Initialize data repositories (mysql)
+	exampleMySQLRepository := dataSourceMySQL.NewMySQLExampleRepository(
 		appConfig.GetDatabaseConnection())
+	// Initialize data repository (redis) for cache
+	exampleRedisRepository := dataSourceRedis.NewRedisCache(
+		appConfig.GetRedisClientConnection(), time.Minute)
 	// Initialize app use case (service)
-	exampleService := useCase.NewExampleService(exampleRepository)
+	exampleService := useCase.NewExampleService(exampleMySQLRepository)
 	// initialize http handler
 	handler.NewMainHandler(appEngine)
-	handler.NewExampleHandler(appEngine, exampleService)
+	handler.NewExampleHandler(appEngine, exampleService, exampleRedisRepository)
 	// run the server
 	log.Fatal(appEngine.Run(appConfig.GetServerPort()))
 }

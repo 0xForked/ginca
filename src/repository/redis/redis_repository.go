@@ -1,30 +1,45 @@
 package redis
 
-//var ctx = context.Background()
+import (
+	"context"
+	"encoding/json"
+	"github.com/aasumitro/gorest/src/domain"
+	"github.com/go-redis/redis/v8"
+	"time"
+)
 
-//type redisCache struct {
-//	redisClient			*redis.Client
-//}
+var ctx = context.Background()
 
-//func NewRedisCache(redis *redis.Client) domain.RedisRepository {
-//	return &redisCache{redisClient: redis}
-//}
+type redisCache struct {
+	redisClient			*redis.Client
+	expires				time.Duration
+}
 
-//func (redis redisCache) GetCache(key string) {
-	//data, err := redis.redisClient.Get(ctx, key).Result()
-	//if data == "" || err != nil {
-	//	return nil
-	//}
-	//
-	//entity := &entity.Account{}
-	//jsonUnmarshalError := json.Unmarshal([]byte(data), entity)
-	//if entity.ID == "" || jsonUnmarshalError != nil {
-	//	return nil
-	//}
-	//
-	//return entity
-//}
+func NewRedisCache(redis *redis.Client, exp time.Duration) domain.RedisRepository {
+	return &redisCache{redisClient: redis, expires: exp}
+}
 
-//func (redis redisCache) SetCache(key string, val string) {
-	//repos
-//}
+func (cache redisCache) Set(key string, value domain.Example) {
+	jsonMarshal, err := json.Marshal(value)
+	if err != nil {
+		panic(err)
+	}
+
+	cache.redisClient.Set(ctx, key, jsonMarshal, cache.expires)
+}
+
+func (cache redisCache) Get(key string) *domain.Example {
+	val, err := cache.redisClient.Get(ctx, key).Result()
+	if err != nil {
+		return nil
+	}
+
+	example := domain.Example{}
+
+	err = json.Unmarshal([]byte(val), &example)
+	if err != nil {
+		panic(err)
+	}
+
+	return &example
+}
