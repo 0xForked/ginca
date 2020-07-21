@@ -34,13 +34,13 @@ func main() {
 	exampleMySQLRepository := dataSourceMySQL.NewMySQLExampleRepository(
 		appConfig.GetDatabaseConnection())
 	// Initialize data repository (redis) for cache
-	exampleRedisRepository := dataSourceRedis.NewRedisCache(
+	redisRepository := dataSourceRedis.NewRedisCache(
 		appConfig.GetRedisClientConnection(), time.Minute)
 	// Initialize app use case (service)
 	exampleService := useCase.NewExampleService(exampleMySQLRepository)
 	// initialize http handler
-	handler.NewMainHandler(appEngine, exampleRedisRepository.Ping())
-	handler.NewExampleHandler(appEngine, exampleService, exampleRedisRepository)
+	handler.NewMainHandler(appEngine, redisRepository)
+	handler.NewExampleHandler(appEngine, exampleService, redisRepository)
 	// run the server
 	log.Fatal(appEngine.Run(appConfig.GetServerPort()))
 }
