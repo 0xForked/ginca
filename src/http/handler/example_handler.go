@@ -8,13 +8,6 @@ import (
 	"time"
 )
 
-// ResponseError represent the responses error struct
-type response struct {
-	Code 	int64 			`json:"code"`
-	Message	string			`json:"message"`
-	Data	interface{} 	`json:"data"`
-}
-
 // ExampleHandler represent the http handler for example
 type exampleHandler struct {
 	exampleService domain.ExampleService
@@ -35,9 +28,9 @@ func NewExampleHandler(router *gin.Engine, service domain.ExampleService) {
 func (handler exampleHandler) fetch(context *gin.Context) {
 	examples, _:= handler.exampleService.Fetch()
 
-	context.JSON(http.StatusOK, response{
+	context.JSON(http.StatusOK, domain.Respond{
 		Code : http.StatusOK,
-		Message : http.StatusText(http.StatusOK),
+		Status : http.StatusText(http.StatusOK),
 		Data : examples,
 	})
 }
@@ -52,16 +45,16 @@ func (handler exampleHandler) find(context *gin.Context) {
 	example, err := handler.exampleService.Find(id)
 
 	if err != nil {
-		context.JSON(http.StatusBadRequest, response{
+		context.JSON(http.StatusBadRequest, domain.Respond{
 			Code : http.StatusBadRequest,
-			Message: err.Error(),
+			Status: err.Error(),
 		})
 		return
 	}
 
-	context.JSON(http.StatusOK, response{
+	context.JSON(http.StatusOK, domain.Respond{
 		Code : http.StatusOK,
-		Message : http.StatusText(http.StatusOK),
+		Status : http.StatusText(http.StatusOK),
 		Data : example,
 	})
 }
@@ -70,24 +63,24 @@ func (handler exampleHandler) create(context *gin.Context) {
 	var example domain.Example
 
 	if err := context.ShouldBind(&example); err != nil {
-		context.JSON(http.StatusUnprocessableEntity, response{
+		context.JSON(http.StatusUnprocessableEntity, domain.Respond{
 			Code : http.StatusUnprocessableEntity,
-			Message: err.Error(),
+			Status: err.Error(),
 		})
 		return
 	}
 
 	if err := handler.exampleService.Store(&example); err != nil {
-		context.JSON(http.StatusBadRequest, response{
+		context.JSON(http.StatusBadRequest, domain.Respond{
 			Code : http.StatusBadRequest,
-			Message: err.Error(),
+			Status: err.Error(),
 		})
 		return
 	}
 
-	context.JSON(http.StatusCreated, response{
+	context.JSON(http.StatusCreated, domain.Respond{
 		Code : http.StatusCreated,
-		Message : http.StatusText(http.StatusCreated),
+		Status : http.StatusText(http.StatusCreated),
 		Data : example,
 	})
 }
@@ -101,9 +94,9 @@ func (handler exampleHandler) edit(context *gin.Context) {
 	var example domain.Example
 
 	if err := context.ShouldBind(&example); err != nil {
-		context.JSON(http.StatusUnprocessableEntity, response{
+		context.JSON(http.StatusUnprocessableEntity, domain.Respond{
 			Code : http.StatusUnprocessableEntity,
-			Message: err.Error(),
+			Status: err.Error(),
 		})
 		return
 	}
@@ -112,16 +105,16 @@ func (handler exampleHandler) edit(context *gin.Context) {
 	example.UpdatedAt = time.Now()
 
 	if err := handler.exampleService.Update(&example); err != nil {
-		context.JSON(http.StatusBadRequest, response{
+		context.JSON(http.StatusBadRequest, domain.Respond{
 			Code : http.StatusBadRequest,
-			Message: err.Error(),
+			Status: err.Error(),
 		})
 		return
 	}
 
-	context.JSON(http.StatusOK, response{
+	context.JSON(http.StatusOK, domain.Respond{
 		Code : http.StatusOK,
-		Message : http.StatusText(http.StatusOK),
+		Status : http.StatusText(http.StatusOK),
 		Data: example,
 	})
 }
@@ -133,15 +126,15 @@ func (handler exampleHandler) destroy(context *gin.Context) {
 	}
 
 	if err := handler.exampleService.Delete(id); err != nil {
-		context.JSON(http.StatusBadRequest, response{
+		context.JSON(http.StatusBadRequest, domain.Respond{
 			Code : http.StatusBadRequest,
-			Message: err.Error(),
+			Status: err.Error(),
 		})
 		return
 	}
 
-	context.JSON(http.StatusNoContent, response{
+	context.JSON(http.StatusNoContent, domain.Respond{
 		Code : http.StatusNoContent,
-		Message : http.StatusText(http.StatusNoContent),
+		Status : http.StatusText(http.StatusNoContent),
 	})
 }
