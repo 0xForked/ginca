@@ -8,10 +8,12 @@ import (
 	"net/http"
 )
 
-type mainHandler struct {}
+type mainHandler struct {
+	redisStatus	string
+}
 
-func NewMainHandler(router *gin.Engine) {
-	handler := &mainHandler{}
+func NewMainHandler(router *gin.Engine, redisStatus string) {
+	handler := &mainHandler{redisStatus: redisStatus}
 	router.GET("/", handler.home)
 	router.GET("/health", handler.ping)
 	router.NoRoute(handler.notFound)
@@ -30,9 +32,9 @@ func (handler mainHandler) ping(context *gin.Context) {
 		Code: http.StatusOK,
 		Status : http.StatusText(http.StatusOK),
 		Data: map[string]string{
-			"service" : "Service is running well",
-			"mysql" : "",
-			"redis": "",
+			"app" : "service is running well",
+			"storage" : "mysql is running well",
+			"cache": handler.redisStatus,
 		},
 	})
 }

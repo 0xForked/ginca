@@ -37,7 +37,7 @@ func main() {
 	// Initialize app use case (service)
 	exampleService := useCase.NewExampleService(exampleMySQLRepository)
 	// initialize http handler
-	handler.NewMainHandler(appEngine)
+	handler.NewMainHandler(appEngine, exampleRedisRepository.Ping())
 	handler.NewExampleHandler(appEngine, exampleService, exampleRedisRepository)
 	// run the server
 	log.Fatal(appEngine.Run(appConfig.GetServerPort()))

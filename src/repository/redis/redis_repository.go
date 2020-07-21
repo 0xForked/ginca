@@ -43,3 +43,11 @@ func (cache redisCache) Get(key string) *domain.Example {
 
 	return &example
 }
+
+func (cache redisCache) Ping() string {
+	if err := cache.redisClient.Ping(ctx).Err(); err != nil {
+		return domain.RedisUnavailable.Error()
+	}
+
+	return domain.RedisAvailable
+}

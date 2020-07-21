@@ -29,4 +29,5 @@ type MySQlRepository interface {
 type RedisRepository interface {
 	Set(key string, value Example)
 	Get(key string) *Example
+	Ping() string
 }
