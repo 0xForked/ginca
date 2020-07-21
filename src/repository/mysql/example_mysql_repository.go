@@ -9,7 +9,7 @@ type mysqlExampleRepository struct {
 	connection *gorm.DB
 }
 
-func NewMySQLExampleRepository(db *gorm.DB) domain.MySQlRepository {
+func NewMySQLExampleRepository(db *gorm.DB) domain.ExampleMySQlRepository {
 	return &mysqlExampleRepository{connection: db}
 }
 

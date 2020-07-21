@@ -18,7 +18,7 @@ type ExampleService interface {
 	Delete(id int) error
 }
 
-type MySQlRepository interface {
+type ExampleMySQlRepository interface {
 	Fetch() ([]Example, error)
 	Find(id int) (Example, error)
 	Store(example *Example) error
@@ -27,7 +27,8 @@ type MySQlRepository interface {
 }
 
 type RedisRepository interface {
-	Set(key string, value Example)
-	Get(key string) *Example
+	Set(key string, value interface{})
+	GetObject(key string) *map[string]interface{}
+	GetArray(key string) *[]map[string]interface{}
 	Ping() string
 }

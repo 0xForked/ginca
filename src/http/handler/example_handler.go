@@ -15,6 +15,8 @@ type exampleHandler struct {
 	exampleCache domain.RedisRepository
 }
 
+var handlerName = "examples"
+
 // NewExampleHandler will initialize the example resources endpoint
 func NewExampleHandler(router *gin.Engine, service domain.ExampleService, redis domain.RedisRepository) {
 	handler := &exampleHandler{exampleService: service, exampleCache: redis}
@@ -28,13 +30,32 @@ func NewExampleHandler(router *gin.Engine, service domain.ExampleService, redis 
 
 // Fetch will get all the example data
 func (handler exampleHandler) fetch(context *gin.Context) {
-	examples, _:= handler.exampleService.Fetch()
+	var examples = handler.exampleCache.GetArray(
+		fmt.Sprintf("%s:all", handlerName))
 
-	context.JSON(http.StatusOK, domain.Respond{
-		Code : http.StatusOK,
-		Status : http.StatusText(http.StatusOK),
-		Data : examples,
-	})
+	if examples == nil {
+		examples, err:= handler.exampleService.Fetch()
+		if err != nil {
+			context.JSON(http.StatusBadRequest, domain.Respond{
+				Code : http.StatusBadRequest,
+				Status: err.Error(),
+			})
+			return
+		}
+		handler.exampleCache.Set(
+			fmt.Sprintf("%s:all", handlerName), examples)
+		context.JSON(http.StatusOK, domain.Respond{
+			Code : http.StatusOK,
+			Status : http.StatusText(http.StatusOK),
+			Data : examples,
+		})
+	} else {
+		context.JSON(http.StatusOK, domain.Respond{
+			Code : http.StatusOK,
+			Status : http.StatusText(http.StatusOK),
+			Data : examples,
+		})
+	}
 }
 
 // Find will get example data by id
@@ -44,8 +65,8 @@ func (handler exampleHandler) find(context *gin.Context) {
 		panic("error")
 	}
 
-	var example = handler.exampleCache.Get(
-		fmt.Sprintf("example:%d", id))
+	var example = handler.exampleCache.GetObject(
+		fmt.Sprintf("%s:%d", handlerName, id))
 
 	if example == nil {
 		example, err := handler.exampleService.Find(id)
@@ -56,7 +77,7 @@ func (handler exampleHandler) find(context *gin.Context) {
 			})
 			return
 		}
-		handler.exampleCache.Set(fmt.Sprintf("example:%d", id), example)
+		handler.exampleCache.Set(fmt.Sprintf("%s:%d", handlerName, id), example)
 		context.JSON(http.StatusOK, domain.Respond{
 			Code : http.StatusOK,
 			Status : http.StatusText(http.StatusOK),

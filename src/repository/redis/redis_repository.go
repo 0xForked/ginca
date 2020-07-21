@@ -19,7 +19,7 @@ func NewRedisCache(redis *redis.Client, exp time.Duration) domain.RedisRepositor
 	return &redisCache{redisClient: redis, expires: exp}
 }
 
-func (cache redisCache) Set(key string, value domain.Example) {
+func (cache redisCache) Set(key string, value interface{}) {
 	jsonMarshal, err := json.Marshal(value)
 	if err != nil {
 		panic(err)
@@ -28,13 +28,13 @@ func (cache redisCache) Set(key string, value domain.Example) {
 	cache.redisClient.Set(ctx, key, jsonMarshal, cache.expires)
 }
 
-func (cache redisCache) Get(key string) *domain.Example {
+func (cache redisCache) GetObject(key string) *map[string]interface{} {
 	val, err := cache.redisClient.Get(ctx, key).Result()
 	if err != nil {
 		return nil
 	}
 
-	example := domain.Example{}
+	var example map[string]interface{}
 
 	err = json.Unmarshal([]byte(val), &example)
 	if err != nil {
@@ -42,6 +42,22 @@ func (cache redisCache) Get(key string) *domain.Example {
 	}
 
 	return &example
+}
+
+func (cache redisCache) GetArray(key string) *[]map[string]interface{} {
+	val, err := cache.redisClient.Get(ctx, key).Result()
+	if err != nil {
+		return nil
+	}
+
+	var examples []map[string]interface{}
+
+	err = json.Unmarshal([]byte(val), &examples)
+	if err != nil {
+		panic(err)
+	}
+
+	return &examples
 }
 
 func (cache redisCache) Ping() string {

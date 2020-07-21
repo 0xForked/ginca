@@ -1,0 +1,20 @@
+version: "3"
+
+# Define services
+services:
+  # App Service
+  web:
+    # Configuration for building the docker image for the service
+    build:
+      # Use an image built from the specified dockerfile in the current directory.
+      context: .
+      # Load docker file
+      dockerfile: Dockerfile
+    # Set container name
+    container_name: example_management_api
+    # Set app running port
+    ports:
+      - 9090:9090
+    # Set app volumes for data environment
+    volumes:
+      - ./env:/app/.env
