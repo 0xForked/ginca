@@ -11,10 +11,7 @@ services:
       # Load docker file
       dockerfile: Dockerfile
     # Set container name
-    container_name: example_management_api
+    container_name: example_service
     # Set app running port
     ports:
-      - 9090:9090
-    # Set app volumes for data environment
-    volumes:
-      - ./env:/app/.env
+      - 8000:8000
