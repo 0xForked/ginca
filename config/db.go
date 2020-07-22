@@ -8,7 +8,6 @@ import (
 )
 
 var db *gorm.DB
-var dbStatus string
 
 func (config AppConfig) SetupDatabaseConnection() {
 	// open database connection
@@ -26,7 +25,6 @@ func (config AppConfig) SetupDatabaseConnection() {
 }
 
 func setDBConnectionAndStatus(DB *gorm.DB) {
-	dbStatus = domain.MySQLAvailable
 	db = DB
 }
 
@@ -34,7 +32,10 @@ func (config AppConfig) GetDatabaseConnection() *gorm.DB {
 	return db
 }
 
-// todo: validate this db status (next) before throw text
 func (config AppConfig) GetDatabaseStatus() string {
-	return dbStatus
+	if err := db.DB().Ping(); err != nil {
+		return domain.MySQLUnavailable.Error()
+	}
+
+	return domain.MySQLAvailable
 }

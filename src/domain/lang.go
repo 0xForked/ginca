@@ -4,8 +4,7 @@ import "errors"
 
 // error text
 var (
-	//ServiceUnavailable = errors.New("service currently unavailable")
-	//MySQLUnavailable = errors.New("mysql currently unavailable")
+	MySQLUnavailable = errors.New("mysql currently unavailable")
 	RedisUnavailable =  errors.New("redis currently unavailable")
 	RouteNotFound = errors.New("route not found")
 )
