@@ -31,13 +31,13 @@ func (cache redisCache) Set(key string, value interface{}) {
 	cache.redisClient.Set(ctx, key, jsonMarshal, cache.expires)
 }
 
-func (cache redisCache) GetObject(key string) *map[string]interface{} {
+func (cache redisCache) Get(key string) *interface{} {
 	val, err := cache.redisClient.Get(ctx, key).Result()
 	if err != nil {
 		return nil
 	}
 
-	var example map[string]interface{}
+	var example interface{}
 
 	err = json.Unmarshal([]byte(val), &example)
 	if err != nil {
@@ -45,22 +45,6 @@ func (cache redisCache) GetObject(key string) *map[string]interface{} {
 	}
 
 	return &example
-}
-
-func (cache redisCache) GetArray(key string) *[]map[string]interface{} {
-	val, err := cache.redisClient.Get(ctx, key).Result()
-	if err != nil {
-		return nil
-	}
-
-	var examples []map[string]interface{}
-
-	err = json.Unmarshal([]byte(val), &examples)
-	if err != nil {
-		panic(err)
-	}
-
-	return &examples
 }
 
 func (cache redisCache) Delete(key string)  {

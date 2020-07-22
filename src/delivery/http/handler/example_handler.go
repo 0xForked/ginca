@@ -35,7 +35,7 @@ func NewExampleHandler(
 
 // Fetch will get all the example data
 func (handler exampleHandler) fetch(context *gin.Context) {
-	var examples = handler.exampleCache.GetArray(
+	var examples = handler.exampleCache.Get(
 		fmt.Sprintf("%s:all", handlerName))
 
 	if examples == nil {
@@ -71,7 +71,7 @@ func (handler exampleHandler) find(context *gin.Context) {
 		panic("error")
 	}
 
-	var example = handler.exampleCache.GetObject(
+	var example = handler.exampleCache.Get(
 		fmt.Sprintf("%s:%d", handlerName, id))
 
 	if example == nil {
