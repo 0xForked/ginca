@@ -36,7 +36,7 @@ func NewExampleHandler(
 // Fetch will get all the example data
 func (handler exampleHandler) fetch(context *gin.Context) {
 	var examples = handler.exampleCache.Get(
-		fmt.Sprintf("%s:all", handlerName))
+		context, fmt.Sprintf("%s:all", handlerName))
 
 	if examples == nil {
 		examples, err:= handler.exampleService.Fetch()
@@ -48,7 +48,8 @@ func (handler exampleHandler) fetch(context *gin.Context) {
 			return
 		}
 
-		handler.exampleCache.Set(fmt.Sprintf("%s:all", handlerName), examples)
+		handler.exampleCache.Set(
+			context, fmt.Sprintf("%s:all", handlerName), examples)
 
 		context.JSON(http.StatusOK, httpDelivery.Respond{
 			Code : http.StatusOK,
@@ -72,7 +73,7 @@ func (handler exampleHandler) find(context *gin.Context) {
 	}
 
 	var example = handler.exampleCache.Get(
-		fmt.Sprintf("%s:%d", handlerName, id))
+		context, fmt.Sprintf("%s:%d", handlerName, id))
 
 	if example == nil {
 		example, err := handler.exampleService.Find(id)
@@ -84,7 +85,8 @@ func (handler exampleHandler) find(context *gin.Context) {
 			return
 		}
 
-		handler.exampleCache.Set(fmt.Sprintf("%s:%d", handlerName, id), example)
+		handler.exampleCache.Set(
+			context, fmt.Sprintf("%s:%d", handlerName, id), example)
 
 		context.JSON(http.StatusOK, httpDelivery.Respond{
 			Code : http.StatusOK,
@@ -153,7 +155,8 @@ func (handler exampleHandler) edit(context *gin.Context) {
 		return
 	}
 
-	handler.exampleCache.Delete(fmt.Sprintf("%s:%d", handlerName, id))
+	handler.exampleCache.Delete(
+		context, fmt.Sprintf("%s:%d", handlerName, id))
 
 	context.JSON(http.StatusOK, httpDelivery.Respond{
 		Code : http.StatusOK,
@@ -176,7 +179,8 @@ func (handler exampleHandler) destroy(context *gin.Context) {
 		return
 	}
 
-	handler.exampleCache.Delete(fmt.Sprintf("%s:%d", handlerName, id))
+	handler.exampleCache.Delete(
+		context, fmt.Sprintf("%s:%d", handlerName, id))
 
 	context.JSON(http.StatusNoContent, httpDelivery.Respond{
 		Code : http.StatusNoContent,

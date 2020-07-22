@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"github.com/aasumitro/gorest/config"
 	httpDelivery "github.com/aasumitro/gorest/src/delivery/http"
 	"github.com/aasumitro/gorest/src/domain"
 	"github.com/gin-gonic/gin"
@@ -10,16 +11,14 @@ import (
 )
 
 type mainHandler struct {
-	redis       domain.RedisCacheContract
-	mysqlStatus string
+	config       *config.AppConfig
 }
 
 func NewMainHandler(
 	router *gin.Engine,
-	redis domain.RedisCacheContract,
-	mysqlStatus string,
+	appConfig *config.AppConfig,
 ) {
-	handler := &mainHandler{redis: redis, mysqlStatus: mysqlStatus}
+	handler := &mainHandler{config: appConfig}
 	router.GET("/", handler.home)
 	router.GET("/health", handler.ping)
 	router.NoRoute(handler.notFound)
@@ -39,8 +38,8 @@ func (handler mainHandler) ping(context *gin.Context) {
 		Status : http.StatusText(http.StatusOK),
 		Data: map[string]string{
 			"app" : domain.ServiceAvailable,
-			"storage" : handler.mysqlStatus,
-			"cache": handler.redis.Ping(),
+			"storage" : handler.config.GetDatabaseStatus(),
+			"cache": handler.config.GetRedisStatus(context),
 		},
 	})
 }

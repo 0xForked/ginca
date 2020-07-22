@@ -1,7 +1,9 @@
 package config
 
 import (
+	"context"
 	"fmt"
+	"github.com/aasumitro/gorest/src/domain"
 	"github.com/go-redis/redis/v8"
 	"github.com/spf13/viper"
 	"strconv"
@@ -28,4 +30,12 @@ func (config AppConfig) SetupRedisClientConnection() {
 
 func (config AppConfig) GetRedisClientConnection() *redis.Client {
 	return redisClient
+}
+
+func (config AppConfig) GetRedisStatus(ctx context.Context) string {
+	if err := redisClient.Ping(ctx).Err(); err != nil {
+		return domain.RedisUnavailable.Error()
+	}
+
+	return domain.RedisAvailable
 }

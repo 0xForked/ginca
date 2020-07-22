@@ -8,8 +8,6 @@ import (
 	"time"
 )
 
-var ctx = context.Background()
-
 type redisCache struct {
 	redisClient			*redis.Client
 	expires				time.Duration
@@ -22,7 +20,7 @@ func NewRedisCache(
 	return &redisCache{redisClient: redis, expires: exp}
 }
 
-func (cache redisCache) Set(key string, value interface{}) {
+func (cache redisCache) Set(ctx context.Context, key string, value interface{}) {
 	jsonMarshal, err := json.Marshal(value)
 	if err != nil {
 		panic(err)
@@ -31,7 +29,7 @@ func (cache redisCache) Set(key string, value interface{}) {
 	cache.redisClient.Set(ctx, key, jsonMarshal, cache.expires)
 }
 
-func (cache redisCache) Get(key string) *interface{} {
+func (cache redisCache) Get(ctx context.Context, key string) *interface{} {
 	val, err := cache.redisClient.Get(ctx, key).Result()
 	if err != nil {
 		return nil
@@ -47,14 +45,6 @@ func (cache redisCache) Get(key string) *interface{} {
 	return &data
 }
 
-func (cache redisCache) Delete(key string)  {
+func (cache redisCache) Delete(ctx context.Context, key string)  {
 	cache.redisClient.Del(ctx, key)
-}
-
-func (cache redisCache) Ping() string {
-	if err := cache.redisClient.Ping(ctx).Err(); err != nil {
-		return domain.RedisUnavailable.Error()
-	}
-
-	return domain.RedisAvailable
 }
