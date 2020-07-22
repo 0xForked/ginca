@@ -12,14 +12,18 @@ import (
 
 // ExampleHandler represent the http handler for example
 type exampleHandler struct {
-	exampleService domain.ExampleServiceContact
-	exampleCache   domain.RedisCacheContact
+	exampleService domain.ExampleServiceContract
+	exampleCache   domain.RedisCacheContract
 }
 
 var handlerName = "examples"
 
 // NewExampleHandler will initialize the example resources endpoint
-func NewExampleHandler(router *gin.Engine, service domain.ExampleServiceContact, redis domain.RedisCacheContact) {
+func NewExampleHandler(
+	router *gin.Engine,
+	service domain.ExampleServiceContract,
+	redis domain.RedisCacheContract,
+) {
 	handler := &exampleHandler{exampleService: service, exampleCache: redis}
 	v1 := router.Group("/v1")
 	v1.GET("/examples", handler.fetch)

@@ -10,11 +10,15 @@ import (
 )
 
 type mainHandler struct {
-	redis       domain.RedisCacheContact
+	redis       domain.RedisCacheContract
 	mysqlStatus string
 }
 
-func NewMainHandler(router *gin.Engine, redis domain.RedisCacheContact, mysqlStatus string) {
+func NewMainHandler(
+	router *gin.Engine,
+	redis domain.RedisCacheContract,
+	mysqlStatus string,
+) {
 	handler := &mainHandler{redis: redis, mysqlStatus: mysqlStatus}
 	router.GET("/", handler.home)
 	router.GET("/health", handler.ping)

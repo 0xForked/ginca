@@ -15,7 +15,10 @@ type redisCache struct {
 	expires				time.Duration
 }
 
-func NewRedisCache(redis *redis.Client, exp time.Duration) domain.RedisCacheContact {
+func NewRedisCache(
+	redis *redis.Client,
+	exp time.Duration,
+) domain.RedisCacheContract {
 	return &redisCache{redisClient: redis, expires: exp}
 }
 

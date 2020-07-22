@@ -1,6 +1,6 @@
 package domain
 
-type RedisCacheContact interface {
+type RedisCacheContract interface {
 	Set(key string, value interface{})
 	GetObject(key string) *map[string]interface{}
 	GetArray(key string) *[]map[string]interface{}
