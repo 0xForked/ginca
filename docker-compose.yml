@@ -15,3 +15,4 @@ services:
     # Set app running port
     ports:
       - 8000:8000
+    restart: on-failure:5
