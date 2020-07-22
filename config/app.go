@@ -6,6 +6,7 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/spf13/viper"
 	"log"
+	"time"
 )
 
 var port string
@@ -59,6 +60,12 @@ func setServerEnvironment()  {
 
 func (config AppConfig) GetServerPort() string {
 	return port
+}
+
+func (config AppConfig) GetCacheTTL() time.Duration {
+	cacheTTL := viper.GetInt(`CACHE_TTL`)
+	cacheDuration := time.Duration(cacheTTL)
+	return cacheDuration * time.Minute
 }
 
 func (config AppConfig) IsDevelopmentMode() bool {

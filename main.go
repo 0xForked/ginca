@@ -9,7 +9,6 @@ import (
 	useCase "github.com/aasumitro/gorest/src/service"
 	"github.com/gin-gonic/gin"
 	"log"
-	"time"
 )
 
 func main() {
@@ -33,7 +32,7 @@ func main() {
 		appConfig.GetDatabaseConnection())
 	// Initialize data repository (cache) for cache
 	redisCache := dataCache.NewRedisCache(
-		appConfig.GetRedisClientConnection(), time.Minute)
+		appConfig.GetRedisClientConnection(), appConfig.GetCacheTTL())
 	// Initialize app use case (service)
 	exampleService := useCase.NewExampleService(exampleMySQLRepository)
 	// initialize http handler
