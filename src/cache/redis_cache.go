@@ -63,6 +63,10 @@ func (cache redisCache) GetArray(key string) *[]map[string]interface{} {
 	return &examples
 }
 
+func (cache redisCache) Delete(key string)  {
+	cache.redisClient.Del(ctx, key)
+}
+
 func (cache redisCache) Ping() string {
 	if err := cache.redisClient.Ping(ctx).Err(); err != nil {
 		return domain.RedisUnavailable.Error()
