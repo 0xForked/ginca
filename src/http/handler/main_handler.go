@@ -9,11 +9,12 @@ import (
 )
 
 type mainHandler struct {
-	redis	 domain.RedisRepository
+	redis		domain.RedisRepository
+	mysqlStatus	string
 }
 
-func NewMainHandler(router *gin.Engine, redis domain.RedisRepository) {
-	handler := &mainHandler{redis: redis}
+func NewMainHandler(router *gin.Engine, redis domain.RedisRepository, mysqlStatus string) {
+	handler := &mainHandler{redis: redis, mysqlStatus: mysqlStatus}
 	router.GET("/", handler.home)
 	router.GET("/health", handler.ping)
 	router.NoRoute(handler.notFound)
@@ -33,7 +34,7 @@ func (handler mainHandler) ping(context *gin.Context) {
 		Status : http.StatusText(http.StatusOK),
 		Data: map[string]string{
 			"app" : domain.ServiceAvailable,
-			"storage" : domain.MySQLAvaiable,
+			"storage" : handler.mysqlStatus,
 			"cache": handler.redis.Ping(),
 		},
 	})

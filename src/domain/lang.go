@@ -13,6 +13,6 @@ var (
 // success text
 var (
 	ServiceAvailable = "service is running well"
-	MySQLAvaiable = "mysql is running well"
+	MySQLAvailable = "mysql is running well"
 	RedisAvailable = "redis is running well"
 )

@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/spf13/viper"
@@ -43,11 +44,16 @@ func setServerPort() {
 }
 
 func setServerEnvironment()  {
+	serviceVersion := viper.GetString(`SERVER_VERSION`)
 	if viper.GetString(`SERVER_ENV`) == "production" {
-		log.Println("Service RUN on RELEASE mode")
+		log.Println(fmt.Sprintf(
+			"Service RUN on RELEASE mode, Service Version: %s",
+			serviceVersion))
 		gin.SetMode(gin.ReleaseMode)
 	} else {
-		log.Println("Service RUN on DEBUG mode")
+		log.Println(fmt.Sprintf(
+			"Service RUN on DEBUG mode, Service Version: %s",
+			serviceVersion))
 	}
 }
 
@@ -58,9 +64,9 @@ func (config AppConfig) GetServerPort() string {
 func (config AppConfig) IsDevelopmentMode() bool {
 	if viper.GetString(`SERVER_ENV`) == "production" {
 		return false
-	} else {
-		return true
 	}
+
+	return true
 }
 
 // InitAppConfig initialize the app configuration
