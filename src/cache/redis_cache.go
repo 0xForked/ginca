@@ -37,14 +37,14 @@ func (cache redisCache) Get(key string) *interface{} {
 		return nil
 	}
 
-	var example interface{}
+	var data interface{}
 
-	err = json.Unmarshal([]byte(val), &example)
+	err = json.Unmarshal([]byte(val), &data)
 	if err != nil {
 		panic(err)
 	}
 
-	return &example
+	return &data
 }
 
 func (cache redisCache) Delete(key string)  {
