@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	httpDelivery "github.com/aasumitro/gorest/src/delivery/http"
 	"github.com/aasumitro/gorest/src/domain"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -11,14 +12,14 @@ import (
 
 // ExampleHandler represent the http handler for example
 type exampleHandler struct {
-	exampleService domain.ExampleService
-	exampleCache domain.RedisRepository
+	exampleService domain.ExampleServiceContact
+	exampleCache   domain.RedisCacheContact
 }
 
 var handlerName = "examples"
 
 // NewExampleHandler will initialize the example resources endpoint
-func NewExampleHandler(router *gin.Engine, service domain.ExampleService, redis domain.RedisRepository) {
+func NewExampleHandler(router *gin.Engine, service domain.ExampleServiceContact, redis domain.RedisCacheContact) {
 	handler := &exampleHandler{exampleService: service, exampleCache: redis}
 	v1 := router.Group("/v1")
 	v1.GET("/examples", handler.fetch)
@@ -36,7 +37,7 @@ func (handler exampleHandler) fetch(context *gin.Context) {
 	if examples == nil {
 		examples, err:= handler.exampleService.Fetch()
 		if err != nil {
-			context.JSON(http.StatusBadRequest, domain.Respond{
+			context.JSON(http.StatusBadRequest, httpDelivery.Respond{
 				Code : http.StatusBadRequest,
 				Status: err.Error(),
 			})
@@ -44,13 +45,13 @@ func (handler exampleHandler) fetch(context *gin.Context) {
 		}
 		handler.exampleCache.Set(
 			fmt.Sprintf("%s:all", handlerName), examples)
-		context.JSON(http.StatusOK, domain.Respond{
+		context.JSON(http.StatusOK, httpDelivery.Respond{
 			Code : http.StatusOK,
 			Status : http.StatusText(http.StatusOK),
 			Data : examples,
 		})
 	} else {
-		context.JSON(http.StatusOK, domain.Respond{
+		context.JSON(http.StatusOK, httpDelivery.Respond{
 			Code : http.StatusOK,
 			Status : http.StatusText(http.StatusOK),
 			Data : examples,
@@ -71,20 +72,20 @@ func (handler exampleHandler) find(context *gin.Context) {
 	if example == nil {
 		example, err := handler.exampleService.Find(id)
 		if err != nil {
-			context.JSON(http.StatusBadRequest, domain.Respond{
+			context.JSON(http.StatusBadRequest, httpDelivery.Respond{
 				Code : http.StatusBadRequest,
 				Status: err.Error(),
 			})
 			return
 		}
 		handler.exampleCache.Set(fmt.Sprintf("%s:%d", handlerName, id), example)
-		context.JSON(http.StatusOK, domain.Respond{
+		context.JSON(http.StatusOK, httpDelivery.Respond{
 			Code : http.StatusOK,
 			Status : http.StatusText(http.StatusOK),
 			Data : example,
 		})
 	} else {
-		context.JSON(http.StatusOK, domain.Respond{
+		context.JSON(http.StatusOK, httpDelivery.Respond{
 			Code : http.StatusOK,
 			Status : http.StatusText(http.StatusOK),
 			Data : example,
@@ -96,7 +97,7 @@ func (handler exampleHandler) create(context *gin.Context) {
 	var example domain.Example
 
 	if err := context.ShouldBind(&example); err != nil {
-		context.JSON(http.StatusUnprocessableEntity, domain.Respond{
+		context.JSON(http.StatusUnprocessableEntity, httpDelivery.Respond{
 			Code : http.StatusUnprocessableEntity,
 			Status: err.Error(),
 		})
@@ -104,14 +105,14 @@ func (handler exampleHandler) create(context *gin.Context) {
 	}
 
 	if err := handler.exampleService.Store(&example); err != nil {
-		context.JSON(http.StatusBadRequest, domain.Respond{
+		context.JSON(http.StatusBadRequest, httpDelivery.Respond{
 			Code : http.StatusBadRequest,
 			Status: err.Error(),
 		})
 		return
 	}
 
-	context.JSON(http.StatusCreated, domain.Respond{
+	context.JSON(http.StatusCreated, httpDelivery.Respond{
 		Code : http.StatusCreated,
 		Status : http.StatusText(http.StatusCreated),
 		Data : example,
@@ -127,7 +128,7 @@ func (handler exampleHandler) edit(context *gin.Context) {
 	var example domain.Example
 
 	if err := context.ShouldBind(&example); err != nil {
-		context.JSON(http.StatusUnprocessableEntity, domain.Respond{
+		context.JSON(http.StatusUnprocessableEntity, httpDelivery.Respond{
 			Code : http.StatusUnprocessableEntity,
 			Status: err.Error(),
 		})
@@ -138,14 +139,14 @@ func (handler exampleHandler) edit(context *gin.Context) {
 	example.UpdatedAt = time.Now()
 
 	if err := handler.exampleService.Update(&example); err != nil {
-		context.JSON(http.StatusBadRequest, domain.Respond{
+		context.JSON(http.StatusBadRequest, httpDelivery.Respond{
 			Code : http.StatusBadRequest,
 			Status: err.Error(),
 		})
 		return
 	}
 
-	context.JSON(http.StatusOK, domain.Respond{
+	context.JSON(http.StatusOK, httpDelivery.Respond{
 		Code : http.StatusOK,
 		Status : http.StatusText(http.StatusOK),
 		Data: example,
@@ -159,14 +160,14 @@ func (handler exampleHandler) destroy(context *gin.Context) {
 	}
 
 	if err := handler.exampleService.Delete(id); err != nil {
-		context.JSON(http.StatusBadRequest, domain.Respond{
+		context.JSON(http.StatusBadRequest, httpDelivery.Respond{
 			Code : http.StatusBadRequest,
 			Status: err.Error(),
 		})
 		return
 	}
 
-	context.JSON(http.StatusNoContent, domain.Respond{
+	context.JSON(http.StatusNoContent, httpDelivery.Respond{
 		Code : http.StatusNoContent,
 		Status : http.StatusText(http.StatusNoContent),
 	})

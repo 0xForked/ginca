@@ -1,4 +1,4 @@
-package domain
+package http
 
 type Respond struct {
 	Code	int			`json:"code"`

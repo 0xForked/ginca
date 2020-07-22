@@ -2,9 +2,9 @@ package main
 
 import (
 	"github.com/aasumitro/gorest/config"
-	"github.com/aasumitro/gorest/src/http/handler"
-	"github.com/aasumitro/gorest/src/http/middleware"
-	dataSourceCache "github.com/aasumitro/gorest/src/repository/cache"
+	dataCache "github.com/aasumitro/gorest/src/cache"
+	httpHandler "github.com/aasumitro/gorest/src/delivery/http/handler"
+	"github.com/aasumitro/gorest/src/delivery/http/middleware"
 	dataSourceMySQL "github.com/aasumitro/gorest/src/repository/mysql"
 	useCase "github.com/aasumitro/gorest/src/service"
 	"github.com/gin-gonic/gin"
@@ -32,15 +32,14 @@ func main() {
 	exampleMySQLRepository := dataSourceMySQL.NewMySQLExampleRepository(
 		appConfig.GetDatabaseConnection())
 	// Initialize data repository (cache) for cache
-	redisCacheRepository := dataSourceCache.NewRedisCache(
+	redisCache := dataCache.NewRedisCache(
 		appConfig.GetRedisClientConnection(), time.Minute)
 	// Initialize app use case (service)
 	exampleService := useCase.NewExampleService(exampleMySQLRepository)
 	// initialize http handler
-	handler.NewMainHandler(appEngine, redisCacheRepository,
+	httpHandler.NewMainHandler(appEngine, redisCache,
 		appConfig.GetDatabaseStatus())
-	handler.NewExampleHandler(appEngine, exampleService,
-		redisCacheRepository)
+	httpHandler.NewExampleHandler(appEngine, exampleService, redisCache)
 	// run the server
 	log.Fatal(appEngine.Run(appConfig.GetServerPort()))
 }

@@ -5,10 +5,10 @@ import (
 )
 
 type exampleService struct {
-	exampleMySqlRepository domain.ExampleMySQlRepository
+	exampleMySqlRepository domain.ExampleMySQlRepositoryContact
 }
 
-func NewExampleService(mysql domain.ExampleMySQlRepository) domain.ExampleService {
+func NewExampleService(mysql domain.ExampleMySQlRepositoryContact) domain.ExampleServiceContact {
 	return &exampleService{exampleMySqlRepository: mysql}
 }
 

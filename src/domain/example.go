@@ -10,7 +10,7 @@ type Example struct {
 	DeletedAt 	*time.Time 	`json:"deleted_at" sql:"index"`
 }
 
-type ExampleService interface {
+type ExampleServiceContact interface {
 	Fetch() ([]Example, error)
 	Find(id int) (Example, error)
 	Store(example *Example) error
@@ -18,7 +18,7 @@ type ExampleService interface {
 	Delete(id int) error
 }
 
-type ExampleMySQlRepository interface {
+type ExampleMySQlRepositoryContact interface {
 	Fetch() ([]Example, error)
 	Find(id int) (Example, error)
 	Store(example *Example) error
