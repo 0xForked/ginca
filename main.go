@@ -9,9 +9,12 @@ import (
 	useCase "github.com/aasumitro/gorest/src/service"
 	"github.com/gin-gonic/gin"
 	"log"
+	"runtime"
 )
 
 func main() {
+	// sets the maximum number of CPUs that can be executing
+	runtime.GOMAXPROCS(runtime.NumCPU())
 	// initialize and setup app configuration
 	appConfig := config.InitAppConfig()
 	// setup server log

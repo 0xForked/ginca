@@ -55,6 +55,7 @@ func setServerEnvironment()  {
 		log.Println(fmt.Sprintf(
 			"Service RUN on DEBUG mode, Service Version: %s",
 			serviceVersion))
+		gin.SetMode(gin.DebugMode)
 	}
 }
 

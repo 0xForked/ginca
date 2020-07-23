@@ -45,6 +45,17 @@ func (cache redisCache) Get(ctx context.Context, key string) *interface{} {
 	return &data
 }
 
-func (cache redisCache) Delete(ctx context.Context, key string)  {
-	cache.redisClient.Del(ctx, key)
+func (cache redisCache) Delete(ctx context.Context, key ...string)  {
+	cache.redisClient.Del(ctx, key...)
+}
+
+func (cache redisCache) IsExist(ctx context.Context, key string) bool {
+	_, err := cache.redisClient.Get(ctx, key).Result()
+	return err != redis.Nil
+}
+
+func (cache redisCache) Expire(ctx context.Context, key string, expiration time.Duration) {
+	if cache.IsExist(ctx, key) {
+		cache.redisClient.Expire(ctx, key, expiration)
+	}
 }

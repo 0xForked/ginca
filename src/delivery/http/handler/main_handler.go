@@ -22,6 +22,7 @@ func NewMainHandler(
 	router.GET("/", handler.home)
 	router.GET("/health", handler.ping)
 	router.NoRoute(handler.notFound)
+	router.NoMethod(handler.noMethod)
 }
 
 func (handler mainHandler) home(context *gin.Context) {
@@ -45,6 +46,14 @@ func (handler mainHandler) ping(context *gin.Context) {
 }
 
 func (handler mainHandler) notFound(context *gin.Context) {
+	context.JSON(http.StatusNotFound, httpDelivery.Respond{
+		Code: http.StatusNotFound,
+		Status: http.StatusText(http.StatusNotFound),
+		Data: domain.RouteNotFound.Error(),
+	})
+}
+
+func (handler mainHandler) noMethod(context *gin.Context) {
 	context.JSON(http.StatusNotFound, httpDelivery.Respond{
 		Code: http.StatusNotFound,
 		Status: http.StatusText(http.StatusNotFound),
