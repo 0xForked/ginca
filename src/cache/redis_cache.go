@@ -49,8 +49,12 @@ func (cache redisCache) Get(ctx context.Context, key string) *interface{} {
 	return &data
 }
 
-func (cache redisCache) Delete(ctx context.Context, key ...string)  {
-	cache.redisClient.Del(ctx, key...)
+func (cache redisCache) Delete(ctx context.Context, keys ...string)  {
+	for _, key := range keys {
+		if cache.IsExist(ctx, key) {
+			cache.redisClient.Del(ctx, key)
+		}
+	}
 }
 
 func (cache redisCache) IsExist(ctx context.Context, key string) bool {

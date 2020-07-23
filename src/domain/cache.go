@@ -8,7 +8,7 @@ import (
 type RedisCacheContract interface {
 	Set(ctx context.Context, key string, value interface{})
 	Get(ctx context.Context, key string) *interface{}
-	Delete(ctx context.Context, key ...string)
+	Delete(ctx context.Context, keys ...string)
 	IsExist(ctx context.Context, key string) bool
 	Expire(ctx context.Context, key string, expiration time.Duration)
 }
