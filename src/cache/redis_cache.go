@@ -3,6 +3,7 @@ package cache
 import (
 	"context"
 	"encoding/json"
+	"github.com/aasumitro/gorest/logs"
 	"github.com/aasumitro/gorest/src/domain"
 	"github.com/go-redis/redis/v8"
 	"time"
@@ -23,7 +24,8 @@ func NewRedisCache(
 func (cache redisCache) Set(ctx context.Context, key string, value interface{}) {
 	jsonMarshal, err := json.Marshal(value)
 	if err != nil {
-		panic(err)
+		logs.AppError.Println(err)
+		return
 	}
 
 	cache.redisClient.Set(ctx, key, jsonMarshal, cache.expires)
@@ -32,6 +34,7 @@ func (cache redisCache) Set(ctx context.Context, key string, value interface{}) 
 func (cache redisCache) Get(ctx context.Context, key string) *interface{} {
 	val, err := cache.redisClient.Get(ctx, key).Result()
 	if err != nil {
+		logs.AppError.Println(err)
 		return nil
 	}
 
@@ -39,7 +42,8 @@ func (cache redisCache) Get(ctx context.Context, key string) *interface{} {
 
 	err = json.Unmarshal([]byte(val), &data)
 	if err != nil {
-		panic(err)
+		logs.AppError.Println(err)
+		return nil
 	}
 
 	return &data

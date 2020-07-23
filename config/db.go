@@ -1,6 +1,7 @@
 package config
 
 import (
+	"github.com/aasumitro/gorest/logs"
 	"github.com/aasumitro/gorest/src/domain"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -16,7 +17,7 @@ func (config AppConfig) SetupDatabaseConnection() {
 		viper.GetString(`DB_DSN_URL`))
 	// error validator database connection
 	if err != nil {
-		panic("Failed to connect to database!")
+		logs.AppError.Println(err)
 	}
 	// Migrate the schema
 	db.AutoMigrate(&domain.Example{})
