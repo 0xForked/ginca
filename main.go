@@ -1,12 +1,12 @@
 package main
 
 import (
-	"github.com/aasumitro/gorest/config"
-	dataCache "github.com/aasumitro/gorest/src/cache"
-	httpHandler "github.com/aasumitro/gorest/src/delivery/http/handler"
-	"github.com/aasumitro/gorest/src/delivery/http/middleware"
-	dataSourceMySQL "github.com/aasumitro/gorest/src/repository/mysql"
-	useCase "github.com/aasumitro/gorest/src/service"
+	"github.com/aasumitro/ginca/config"
+	dataCache "github.com/aasumitro/ginca/src/cache"
+	httpHandler "github.com/aasumitro/ginca/src/delivery/http/handler"
+	"github.com/aasumitro/ginca/src/delivery/http/middleware"
+	dataSourceMySQL "github.com/aasumitro/ginca/src/repository/mysql"
+	useCase "github.com/aasumitro/ginca/src/service"
 	"github.com/gin-gonic/gin"
 	"log"
 	"runtime"

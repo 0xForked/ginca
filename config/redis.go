@@ -3,7 +3,7 @@ package config
 import (
 	"context"
 	"fmt"
-	"github.com/aasumitro/gorest/src/domain"
+	"github.com/aasumitro/ginca/src/domain"
 	"github.com/go-redis/redis/v8"
 	"github.com/spf13/viper"
 	"strconv"

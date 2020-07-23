@@ -2,7 +2,7 @@ package config
 
 import (
 	"fmt"
-	"github.com/aasumitro/gorest/logs"
+	"github.com/aasumitro/ginca/logs"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 	"io"

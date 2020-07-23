@@ -1,7 +1,7 @@
 package service
 
 import (
-	"github.com/aasumitro/gorest/src/domain"
+	"github.com/aasumitro/ginca/src/domain"
 )
 
 type exampleService struct {

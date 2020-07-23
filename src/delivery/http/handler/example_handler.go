@@ -2,8 +2,8 @@ package handler
 
 import (
 	"fmt"
-	httpDelivery "github.com/aasumitro/gorest/src/delivery/http"
-	"github.com/aasumitro/gorest/src/domain"
+	httpDelivery "github.com/aasumitro/ginca/src/delivery/http"
+	"github.com/aasumitro/ginca/src/domain"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"

@@ -2,9 +2,9 @@ package handler
 
 import (
 	"fmt"
-	"github.com/aasumitro/gorest/config"
-	httpDelivery "github.com/aasumitro/gorest/src/delivery/http"
-	"github.com/aasumitro/gorest/src/domain"
+	"github.com/aasumitro/ginca/config"
+	httpDelivery "github.com/aasumitro/ginca/src/delivery/http"
+	"github.com/aasumitro/ginca/src/domain"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 	"net/http"

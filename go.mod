@@ -1,4 +1,4 @@
-module github.com/aasumitro/gorest
+module github.com/aasumitro/ginca
 
 go 1.13
 

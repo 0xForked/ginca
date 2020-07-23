@@ -3,8 +3,8 @@ package cache
 import (
 	"context"
 	"encoding/json"
-	"github.com/aasumitro/gorest/logs"
-	"github.com/aasumitro/gorest/src/domain"
+	"github.com/aasumitro/ginca/logs"
+	"github.com/aasumitro/ginca/src/domain"
 	"github.com/go-redis/redis/v8"
 	"time"
 )

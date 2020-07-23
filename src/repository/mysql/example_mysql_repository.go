@@ -1,8 +1,8 @@
 package mysql
 
 import (
-	"github.com/aasumitro/gorest/logs"
-	"github.com/aasumitro/gorest/src/domain"
+	"github.com/aasumitro/ginca/logs"
+	"github.com/aasumitro/ginca/src/domain"
 	"github.com/jinzhu/gorm"
 )
 

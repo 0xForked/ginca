@@ -1,8 +1,8 @@
 package config
 
 import (
-	"github.com/aasumitro/gorest/logs"
-	"github.com/aasumitro/gorest/src/domain"
+	"github.com/aasumitro/ginca/logs"
+	"github.com/aasumitro/ginca/src/domain"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/spf13/viper"
