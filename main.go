@@ -17,8 +17,10 @@ func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	// initialize and setup app configuration
 	appConfig := config.InitAppConfig()
+	// load server environment
+	appConfig.SetupServerEnvironment()
 	// setup server log
-	appConfig.SetupAppLog()
+	appConfig.SetupServerLog()
 	// setup database connection
 	appConfig.SetupDatabaseConnection()
 	// setup cache client connection

@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func (config AppConfig) SetupAppLog() {
+func (config AppConfig) SetupServerLog() {
 	if config.IsDevelopmentMode() {
 		localAccessLog()
 		localErrorLog()
@@ -40,10 +40,6 @@ func localErrorLog() {
 	logs.AppError = log.New(file, "ERROR: ", log.Ldate|log.Ltime)
 	logs.AppError.SetOutput(file)
 	logs.AppError.Println("Initialize Application Error")
-}
-
-func sentryErrorLog() {
-	// setup sentry error report
 }
 
 func getLogName(logType string) string {

@@ -19,8 +19,6 @@ type AppConfig struct {
 func init() {
 	// load and read config file
 	setConfigFile()
-	// set server environment
-	setServerEnvironment()
 	// set server port
 	setServerPort()
 }
@@ -44,11 +42,11 @@ func setServerPort() {
 	port = viper.GetString(`SERVER_PORT`)
 }
 
-func setServerEnvironment()  {
+func (config AppConfig) SetupServerEnvironment()  {
 	serviceVersion := viper.GetString(`SERVER_VERSION`)
-	if viper.GetString(`SERVER_ENV`) == "production" {
+	if !config.IsDevelopmentMode() {
 		log.Println(fmt.Sprintf(
-			"Service RUN on RELEASE mode, Service Version: %s",
+			"Service RUN on PRODUCTION mode, Service Version: %s",
 			serviceVersion))
 		gin.SetMode(gin.ReleaseMode)
 	} else {
