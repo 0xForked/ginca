@@ -34,6 +34,11 @@ func NewExampleHandler(
 }
 
 // Fetch will get all the example data
+// FetchExample godoc
+// @Summary Retrieves all examples data
+// @Produce json
+// @Success 200 {array} domain.Example
+// @Router /examples [get]
 func (handler exampleHandler) fetch(context *gin.Context) {
 	var examples = handler.exampleCache.Get(
 		context, fmt.Sprintf("%s:all", handlerName))
@@ -66,6 +71,12 @@ func (handler exampleHandler) fetch(context *gin.Context) {
 }
 
 // Find will get example data by id
+// FindExample godoc
+// @Summary Retrieves example data based on given ID
+// @Produce json
+// @Param id path integer true "Example ID"
+// @Success 200 {object} domain.Example
+// @Router /users/{id} [get]
 func (handler exampleHandler) find(context *gin.Context) {
 	id, err := strconv.Atoi(context.Param("id"))
 	if err != nil {

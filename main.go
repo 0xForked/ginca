@@ -14,23 +14,23 @@ import (
 	swaggerFiles "github.com/swaggo/files"
 	"github.com/swaggo/gin-swagger"
 
-	_ "github.com/swaggo/gin-swagger/example/basic/docs"
+	_ "github.com/aasumitro/ginca/docs"
 )
 
-// @title Swagger Example API
+// @title Blueprint Swagger Example API
 // @version 1.0
-// @description This is a sample server for example data.
+// @description Swagger API for Example Service Blueprint.
 // @termsOfService http://swagger.io/terms/
 
 // @contact.name API Support
 // @contact.url http://www.swagger.io/support
 // @contact.email support@swagger.io
 
-// @license.name Apache 2.0
+// @license.name MIT
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 
 // @host example.swagger.io
-// @BasePath /v2
+// @BasePath /v1
 func main() {
 	// sets the maximum number of CPUs that can be executing
 	runtime.GOMAXPROCS(runtime.NumCPU())
@@ -48,8 +48,7 @@ func main() {
 	// logger and recovery (crash-free) middleware
 	appEngine := gin.Default()
 	// swagger setup
-	url := ginSwagger.URL("http://localhost:8000/swagger/doc.json") // The url pointing to API definition
-	appEngine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
+	appEngine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	// register custom middleware
 	httpMiddleware := middleware.InitHttpMiddleware()
 	// use custom middleware

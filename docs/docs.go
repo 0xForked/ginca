@@ -18,12 +18,96 @@ var doc = `{
     "info": {
         "description": "{{.Description}}",
         "title": "{{.Title}}",
-        "contact": {},
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "API Support",
+            "email": "hello@aasumitro.id"
+        },
+		"license": {
+            "name": "MIT",
+            "url": "https://github.com/aasumitro/ginca/blob/master/LICENSE"
+        },
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
-    "paths": {}
+    "paths": {
+		"/examples": {
+			"get": {
+				 "produces": [
+                    "application/json"
+                ],
+                "summary": "Retrieves all examples data",
+			},
+			"post": {
+				 "produces": [
+                    "application/json"
+                ],
+                "summary": "Store new example data",
+			},
+		},
+		"/examples/{id}": {
+			"get": {
+				 "produces": [
+                    "application/json"
+                ],
+                "summary": "Retrieves examples data by id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Example ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+ 							"code": 200,
+                        	"status": "OK",
+                            "$ref": "#/definitions/domain.Example"
+                        }
+                    }
+                }
+			},
+			"put": {
+				 "produces": [
+                    "application/json"
+                ],
+                "summary": "Update selected example data by id",
+			},
+			"delete": {
+				 "produces": [
+                    "application/json"
+                ],
+                "summary": "Destroy example data by id",
+			},
+		}
+	},
+    "definitions": {
+        "domain.Example": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+ 				"created_at": {
+                    "type": "string"
+                },
+				"updated_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+            }
+        }
+    },
 }`
 
 type swaggerInfo struct {
@@ -37,12 +121,12 @@ type swaggerInfo struct {
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = swaggerInfo{
-	Version:     "",
+	Version:     "1.0",
 	Host:        "",
-	BasePath:    "",
+	BasePath:    "/v1",
 	Schemes:     []string{},
-	Title:       "",
-	Description: "",
+	Title:       "Blueprint Swagger API",
+	Description: "Swagger API for Example Service Blueprint",
 }
 
 type s struct{}
