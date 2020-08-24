@@ -11,3 +11,4 @@ Todo next :
 - multiple data source repository (RDBMS/Sql, NoSql, External API, File)
 - multiple data delivery (REST, WebSocket, gRPC)
 - sentry support
+- api docs with swagger (swaggo/swag)
