@@ -6,6 +6,7 @@ import "errors"
 var (
 	MySQLUnavailable = errors.New("mysql currently unavailable")
 	RedisUnavailable =  errors.New("redis currently unavailable")
+	RabbitMQUnavailable =  errors.New("rabbitmq currently unavailable")
 	RouteNotFound = errors.New("route not found")
 )
 
@@ -14,4 +15,5 @@ var (
 	ServiceAvailable = "service is running well"
 	MySQLAvailable = "mysql is running well"
 	RedisAvailable = "redis is running well"
+	RabbitMQAvailable = "rabbitmq is running well"
 )
