@@ -21,10 +21,12 @@ func main() {
 	appConfig.SetupServerEnvironment()
 	// setup server log
 	appConfig.SetupServerLog()
-	// setup database connection
-	appConfig.SetupDatabaseConnection()
-	// setup cache client connection
-	appConfig.SetupRedisClientConnection()
+	// setup relation database connection (RDB - Relation Database)
+	appConfig.SetupRDBConnection()
+	// setup cache client connection (RESP - Redis Serialization Protocol)
+	appConfig.SetupRESPConnection()
+	// setup messaging queue connection (AMQP - Advanced Message Queuing Protocol)
+	appConfig.GetAMQPConnection()
 	// Creates a gin router with default middleware:
 	// logger and recovery (crash-free) middleware
 	appEngine := gin.Default()
@@ -34,15 +36,18 @@ func main() {
 	appEngine.Use(httpMiddleware.CORS())
 	// Initialize data repositories (mysql)
 	exampleMySQLRepository := dataSourceMySQL.NewMySQLExampleRepository(
-		appConfig.GetDatabaseConnection())
+		appConfig.GetRDBConnection())
 	// Initialize data repository (cache) for cache
 	redisCache := dataCache.NewRedisCache(
-		appConfig.GetRedisClientConnection(), appConfig.GetCacheTTL())
+		appConfig.GetRESPConnection(),
+		appConfig.GetCacheTTL())
 	// Initialize app use case (service)
-	exampleService := useCase.NewExampleService(exampleMySQLRepository)
+	exampleService := useCase.NewExampleService(
+		exampleMySQLRepository)
 	// initialize http handler
 	httpHandler.NewMainHandler(appEngine, appConfig)
-	httpHandler.NewExampleHandler(appEngine, exampleService, redisCache)
+	httpHandler.NewExampleHandler(
+		appEngine, exampleService, redisCache)
 	// run the server
 	log.Fatal(appEngine.Run(appConfig.GetServerPort()))
 }

@@ -39,8 +39,9 @@ func (handler mainHandler) ping(context *gin.Context) {
 		Status : http.StatusText(http.StatusOK),
 		Data: map[string]string{
 			"app" : domain.ServiceAvailable,
-			"storage" : handler.config.GetDatabaseStatus(),
-			"cache": handler.config.GetRedisStatus(context),
+			"storage" : handler.config.GetRDBStatus(),
+			"cache": handler.config.GetRESPStatus(context),
+			"broker": handler.config.GetAMQPStatus(),
 		},
 	})
 }

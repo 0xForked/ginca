@@ -9,9 +9,9 @@ import (
 	"strconv"
 )
 
-var redisClient *redis.Client
+var respConn *redis.Client
 
-func (config AppConfig) SetupRedisClientConnection() {
+func (config AppConfig) SetupRESPConnection() {
 	// get redis host:port
 	host := fmt.Sprintf("%s:%s",
 		viper.GetString(`REDIS_HOST`),
@@ -21,19 +21,25 @@ func (config AppConfig) SetupRedisClientConnection() {
 	// get redis database position
 	db, _ := strconv.Atoi(viper.GetString(`REDIS_DB`))
 	// make redis client with option and set connection for global use
-	redisClient = redis.NewClient(&redis.Options {
+	conn := redis.NewClient(&redis.Options {
 		Addr:		host,
 		Password:	pwd,
 		DB:			db,
 	})
+	// set the resp connection for global usage
+	setRESPConnection(conn)
 }
 
-func (config AppConfig) GetRedisClientConnection() *redis.Client {
-	return redisClient
+func setRESPConnection(currentRESPConnection *redis.Client) {
+	respConn = currentRESPConnection
 }
 
-func (config AppConfig) GetRedisStatus(ctx context.Context) string {
-	if err := redisClient.Ping(ctx).Err(); err != nil {
+func (config AppConfig) GetRESPConnection() *redis.Client {
+	return respConn
+}
+
+func (config AppConfig) GetRESPStatus(ctx context.Context) string {
+	if err := respConn.Ping(ctx).Err(); err != nil {
 		return domain.RedisUnavailable.Error()
 	}
 
