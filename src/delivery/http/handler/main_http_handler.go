@@ -10,22 +10,22 @@ import (
 	"net/http"
 )
 
-type mainHandler struct {
+type mainHTTPHandler struct {
 	config       *config.AppConfig
 }
 
-func NewMainHandler(
+func NewMainHTTPHandler(
 	router *gin.Engine,
 	appConfig *config.AppConfig,
 ) {
-	handler := &mainHandler{config: appConfig}
+	handler := &mainHTTPHandler{config: appConfig}
 	router.GET("/", handler.home)
 	router.GET("/health", handler.ping)
 	router.NoRoute(handler.notFound)
 	router.NoMethod(handler.noMethod)
 }
 
-func (handler mainHandler) home(context *gin.Context) {
+func (handler mainHTTPHandler) home(context *gin.Context) {
 	context.JSON(http.StatusOK, httpDelivery.Respond{
 		Code : http.StatusOK,
 		Status : http.StatusText(http.StatusOK),
@@ -33,7 +33,7 @@ func (handler mainHandler) home(context *gin.Context) {
 	})
 }
 
-func (handler mainHandler) ping(context *gin.Context) {
+func (handler mainHTTPHandler) ping(context *gin.Context) {
 	context.JSON(http.StatusOK, httpDelivery.Respond{
 		Code: http.StatusOK,
 		Status : http.StatusText(http.StatusOK),
@@ -46,7 +46,7 @@ func (handler mainHandler) ping(context *gin.Context) {
 	})
 }
 
-func (handler mainHandler) notFound(context *gin.Context) {
+func (handler mainHTTPHandler) notFound(context *gin.Context) {
 	context.JSON(http.StatusNotFound, httpDelivery.Respond{
 		Code: http.StatusNotFound,
 		Status: http.StatusText(http.StatusNotFound),
@@ -54,7 +54,7 @@ func (handler mainHandler) notFound(context *gin.Context) {
 	})
 }
 
-func (handler mainHandler) noMethod(context *gin.Context) {
+func (handler mainHTTPHandler) noMethod(context *gin.Context) {
 	context.JSON(http.StatusNotFound, httpDelivery.Respond{
 		Code: http.StatusNotFound,
 		Status: http.StatusText(http.StatusNotFound),

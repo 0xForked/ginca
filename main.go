@@ -5,6 +5,7 @@ import (
 	dataCache "github.com/aasumitro/ginca/src/cache"
 	httpHandler "github.com/aasumitro/ginca/src/delivery/http/handler"
 	"github.com/aasumitro/ginca/src/delivery/http/middleware"
+	wsHandler "github.com/aasumitro/ginca/src/delivery/ws/handler"
 	dataSourceMySQL "github.com/aasumitro/ginca/src/repository/mysql"
 	useCase "github.com/aasumitro/ginca/src/service"
 	"github.com/gin-gonic/gin"
@@ -45,9 +46,17 @@ func main() {
 	exampleService := useCase.NewExampleService(
 		exampleMySQLRepository)
 	// initialize http handler
-	httpHandler.NewMainHandler(appEngine, appConfig)
-	httpHandler.NewExampleHandler(
-		appEngine, exampleService, redisCache)
+	httpHandler.NewMainHTTPHandler(appEngine, appConfig)
+	httpHandler.NewExampleHTTPHandler(appEngine,
+		exampleService, redisCache)
+	// initialize ws handler
+	wsHandler.NewExampleWSHandler(appEngine)
+	/// just for test purpose
+	appEngine.LoadHTMLFiles("index.html")
+	appEngine.GET("/ws-subscriber", func(c *gin.Context) {
+		c.HTML(200, "index.html", nil)
+	})
+	/// just for test purpose
 	// run the server
 	log.Fatal(appEngine.Run(appConfig.GetServerPort()))
 }

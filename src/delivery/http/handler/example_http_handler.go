@@ -11,7 +11,7 @@ import (
 )
 
 // ExampleHandler represent the http handler for example
-type exampleHandler struct {
+type exampleHTTPHandler struct {
 	exampleService domain.ExampleServiceContract
 	exampleCache   domain.RedisCacheContract
 }
@@ -19,12 +19,12 @@ type exampleHandler struct {
 var handlerName = "examples"
 
 // NewExampleHandler will initialize the example resources endpoint
-func NewExampleHandler(
+func NewExampleHTTPHandler(
 	router *gin.Engine,
 	service domain.ExampleServiceContract,
 	redis domain.RedisCacheContract,
 ) {
-	handler := &exampleHandler{exampleService: service, exampleCache: redis}
+	handler := &exampleHTTPHandler{exampleService: service, exampleCache: redis}
 	v1 := router.Group("/v1")
 	v1.GET("/examples", handler.fetch)
 	v1.GET("/examples/:id", handler.find)
@@ -34,7 +34,7 @@ func NewExampleHandler(
 }
 
 // Fetch will get all the example data
-func (handler exampleHandler) fetch(context *gin.Context) {
+func (handler exampleHTTPHandler) fetch(context *gin.Context) {
 	var examples = handler.exampleCache.Get(
 		context, fmt.Sprintf("%s:all", handlerName))
 
@@ -66,7 +66,7 @@ func (handler exampleHandler) fetch(context *gin.Context) {
 }
 
 // Find will get example data by id
-func (handler exampleHandler) find(context *gin.Context) {
+func (handler exampleHTTPHandler) find(context *gin.Context) {
 	id, err := strconv.Atoi(context.Param("id"))
 	if err != nil {
 		panic("error")
@@ -102,7 +102,7 @@ func (handler exampleHandler) find(context *gin.Context) {
 	}
 }
 
-func (handler exampleHandler) create(context *gin.Context) {
+func (handler exampleHTTPHandler) create(context *gin.Context) {
 	var example domain.Example
 
 	if err := context.ShouldBind(&example); err != nil {
@@ -128,7 +128,7 @@ func (handler exampleHandler) create(context *gin.Context) {
 	})
 }
 
-func (handler exampleHandler) edit(context *gin.Context) {
+func (handler exampleHTTPHandler) edit(context *gin.Context) {
 	id, err := strconv.Atoi(context.Param("id"))
 	if err != nil {
 		panic("error")
@@ -165,7 +165,7 @@ func (handler exampleHandler) edit(context *gin.Context) {
 	})
 }
 
-func (handler exampleHandler) destroy(context *gin.Context) {
+func (handler exampleHTTPHandler) destroy(context *gin.Context) {
 	id, err := strconv.Atoi(context.Param("id"))
 	if err != nil {
 		panic("error")
